@@ -4,10 +4,10 @@ BINDIR  	:= bin/
 NAME    	:= btree
 EXE     	:= $(BINDIR)$(NAME)
 
-SFILES  	:= cpp
-HFILES  	:= hpp
+SFILES  	:= c
+HFILES  	:= h
 OFILES  	:= o
-CC      	:= g++
+CC      	:= gcc
 CFLAGS  	:= -c -Wall
 
 SOURCES 	:= $(shell find $(SRCDIR) -name "*.$(SFILES)")
