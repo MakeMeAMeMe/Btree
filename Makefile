@@ -20,6 +20,9 @@ ALLFILES := $(SOURCES)
 
 all: check_folders $(EXE)
 
+obj/main.o: $(SRCDIR)main.$(SFILES)
+	$(CC) $(SRCDIR)main.$(SFILES) $(CFLAGS) -o obj/main.o
+
 $(EXE): $(OBJECTS)
 	$(CC) $^ -o $@ $(LFLAGS)
 
@@ -33,3 +36,4 @@ check_folders:
 clean:
 	rm -fr $(OBJECTS) $(EXE)
 	@rm -fr $(OBJDIR) $(BINDIR)
+	
