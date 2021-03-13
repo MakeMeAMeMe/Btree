@@ -1,6 +1,7 @@
 SRCDIR  	:= src/
 OBJDIR  	:= obj/
 BINDIR  	:= bin/
+DATADIR  	:= data/
 NAME    	:= btree
 EXE     	:= $(BINDIR)$(NAME)
 
@@ -30,10 +31,12 @@ $(OBJDIR)%$(OFILES): $(SRCDIR)%$(SFILES) $(SRCDIR)%$(HFILES)
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) $< -o $@
 
+plot:
+	python ./scripts/plot.py
+
 check_folders:
-	@mkdir -p $(SRCDIR) $(OBJDIR) $(BINDIR)
+	@mkdir -p $(SRCDIR) $(OBJDIR) $(BINDIR) $(DATADIR)
 
 clean:
 	rm -fr $(OBJECTS) $(EXE)
 	@rm -fr $(OBJDIR) $(BINDIR)
-	
