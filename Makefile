@@ -4,10 +4,10 @@ BINDIR  	:= bin/
 NAME    	:= btree
 EXE     	:= $(BINDIR)$(NAME)
 
-SFILES  	:= cpp
-HFILES  	:= hpp
+SFILES  	:= c
+HFILES  	:= h
 OFILES  	:= o
-CC      	:= g++
+CC      	:= gcc
 CFLAGS  	:= -c -Wall
 
 SOURCES 	:= $(shell find $(SRCDIR) -name "*.$(SFILES)")
@@ -19,6 +19,9 @@ ALLFILES := $(SOURCES)
 .PHONY: all clean
 
 all: check_folders $(EXE)
+
+obj/main.o: $(SRCDIR)main.$(SFILES)
+	$(CC) $(SRCDIR)main.$(SFILES) $(CFLAGS) -o obj/main.o
 
 $(EXE): $(OBJECTS)
 	$(CC) $^ -o $@ $(LFLAGS)
@@ -33,3 +36,4 @@ check_folders:
 clean:
 	rm -fr $(OBJECTS) $(EXE)
 	@rm -fr $(OBJDIR) $(BINDIR)
+	
