@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include "./btree/btree.h"
+#include "./avl_tree/avl_tree.h"
 
 #define PIOR_CASO_FILE_PATH "./data/pior_caso.txt"
 #define MEDIO_CASO_FILE_PATH "./data/medio_caso.txt"

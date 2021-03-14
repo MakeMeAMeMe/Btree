@@ -11,14 +11,14 @@ btree* create_tree(int order) {
     return new_tree;
 }
 
-node* create_node(btree* tree) {
+btree_node* create_node(btree* tree) {
     int MAX = tree->order * 2;
-    node* new_node = (node*)malloc(sizeof(node));
+    btree_node* new_node = (btree_node*)malloc(sizeof(btree_node));
 
     new_node->parent = NULL;
 
     new_node->keys = malloc(sizeof(int) * (MAX + 1));
-    new_node->children = malloc(sizeof(node) * (MAX + 2));
+    new_node->children = malloc(sizeof(btree_node) * (MAX + 2));
     new_node->count = 0;
 
     for (int i = 0; i < MAX + 2; i++)
@@ -27,7 +27,7 @@ node* create_node(btree* tree) {
     return new_node;
 }
 
-void run(node* node, void(visit)(int key)) {
+void run(btree_node* node, void(visit)(int key)) {
     if (node != NULL) {
         for (int i = 0; i < node->count; i++) {
             run(node->children[i], visit);
@@ -38,7 +38,7 @@ void run(node* node, void(visit)(int key)) {
 }
 
 int search_key(btree* tree, int key) {
-    node* node = tree->root;
+    btree_node* node = tree->root;
 
     while (node != NULL) {
         int i = binary_search(node, key);
@@ -52,7 +52,7 @@ int search_key(btree* tree, int key) {
     return 0;
 }
 
-int binary_search(node* node, int key) {
+int binary_search(btree_node* node, int key) {
     int start = 0, end = node->count - 1, mid;
     while (start <= end) {
         mid = (start + end) / 2;
@@ -67,8 +67,8 @@ int binary_search(node* node, int key) {
     return start;
 }
 
-node* search_node(btree* tree, int key) {
-    node* node = tree->root;
+btree_node* search_node(btree* tree, int key) {
+    btree_node* node = tree->root;
 
     while (node != NULL) {
         int i = binary_search(node, key);
@@ -82,7 +82,7 @@ node* search_node(btree* tree, int key) {
     return NULL;
 }
 
-void insert_key_node(node* insert_node, node* new_node, int key) {
+void insert_key_node(btree_node* insert_node, btree_node* new_node, int key) {
     int i = binary_search(insert_node, key);
 
     for (int j = insert_node->count - 1; j >= i; j--) {
@@ -96,13 +96,13 @@ void insert_key_node(node* insert_node, node* new_node, int key) {
     insert_node->count++;
 }
 
-int overflow(btree* tree, node* node) {
+int overflow(btree* tree, btree_node* node) {
     return node->count > tree->order * 2;
 }
 
-node* split_node(btree* tree, node* split_node) {
+btree_node* split_node(btree* tree, btree_node* split_node) {
     int mid = split_node->count / 2;
-    node* new_node = create_node(tree);
+    btree_node* new_node = create_node(tree);
     new_node->parent = split_node->parent;
 
     for (int i = mid + 1; i < split_node->count; i++) {
@@ -122,19 +122,19 @@ node* split_node(btree* tree, node* split_node) {
 }
 
 void insert_key(btree* tree, int key) {
-    node* node = search_node(tree, key);
+    btree_node* node = search_node(tree, key);
 
     insert_recursive_key(tree, node, NULL, key);
 }
 
-void insert_recursive_key(btree* tree, node* insert_node, node* new_node, int key) {
+void insert_recursive_key(btree* tree, btree_node* insert_node, btree_node* new_node, int key) {
     insert_key_node(insert_node, new_node, key);
     if (overflow(tree, insert_node)) {
         int promoted = insert_node->keys[tree->order];
-        node* new = split_node(tree, insert_node);
+        btree_node* new = split_node(tree, insert_node);
 
         if (insert_node->parent == NULL) {
-            node* parent = create_node(tree);
+            btree_node* parent = create_node(tree);
             parent->children[0] = insert_node;
             insert_key_node(parent, new, promoted);
 
