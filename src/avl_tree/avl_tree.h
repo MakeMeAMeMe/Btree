@@ -5,7 +5,7 @@
 
 typedef struct avl_tree avl_tree;
 struct avl_tree {
-    node* root;
+    avl_node* root;
     int order;
 };
 
