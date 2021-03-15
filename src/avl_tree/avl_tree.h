@@ -6,7 +6,15 @@
 typedef struct avl_tree avl_tree;
 struct avl_tree {
     avl_node* root;
-    int order;
 };
+
+void create_tree(avl_tree** tree);
+void create_node(avl_node** node, int key);
+void run(avl_tree* tree);
+int search_key(avl_tree* tree, int key);
+void insert_key(avl_tree* tree, int key);
+void delete_key(avl_tree* tree, int key);
+void destroy_tree(avl_tree* tree);
+void destroy_node(avl_node* node);
 
 #endif
