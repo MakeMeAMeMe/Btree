@@ -8,13 +8,14 @@ struct avl_tree {
     avl_node* root;
 };
 
-void create_tree(avl_tree** tree);
-void create_node(avl_node** node, int key);
-void run(avl_tree* tree);
-int search_key(avl_tree* tree, int key);
-void insert_key(avl_tree* tree, int key);
-void delete_key(avl_tree* tree, int key);
-void destroy_tree(avl_tree* tree);
-void destroy_node(avl_node* node);
+void avl_create_tree(avl_tree** tree);
+void avl_create_node(avl_node** node, int key);
+void avl_run(avl_tree* tree);
+int avl_search_key(avl_tree* tree, int key);
+void avl_insert_key(avl_tree* tree, int key);
+int avl_delete_key(avl_tree* tree, int key);
+int avl_delete_key_and_sub_branch(avl_tree* tree, int key);
+void avl_destroy_tree(avl_tree* tree);
+void avl_destroy_node(avl_node* node);
 
 #endif
