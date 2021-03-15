@@ -117,6 +117,7 @@ int height(avl_node* node) {
 
     return left > right ? left : right;
 }
+
 int bf(avl_node* node) {
     int left, right;
     left = 0;
@@ -157,7 +158,7 @@ avl_node* rse(avl_node* node) {
     }
     avl_node* parent = node->parent;
     avl_node* left = node->left;
-    
+
     node->left = left->right;
     node->parent = left;
     left->right = node;
@@ -167,10 +168,11 @@ avl_node* rse(avl_node* node) {
 }
 
 avl_node* rde(avl_node* node) {
- node->right = rsd(node->right);
- return rse(node);
+    node->right = rsd(node->right);
+    return rse(node);
 }
+
 avl_node* rdd(avl_node* node) {
- node->left = rse(node->left);
- return rsd(node);
+    node->left = rse(node->left);
+    return rsd(node);
 }
