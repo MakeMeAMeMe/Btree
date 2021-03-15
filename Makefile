@@ -9,7 +9,7 @@ SFILES  	:= c
 HFILES  	:= h
 OFILES  	:= o
 CC      	:= gcc
-CFLAGS  	:= -c -Wall
+CFLAGS  	:= -c -Wall -g
 
 SOURCES 	:= $(shell find $(SRCDIR) -name "*.$(SFILES)")
 HEADERS 	:= $(shell find $(SRCDIR) -name "*.$(HFILES)")
@@ -25,7 +25,7 @@ obj/main.o: $(SRCDIR)main.$(SFILES)
 	$(CC) $(SRCDIR)main.$(SFILES) $(CFLAGS) -o obj/main.o
 
 $(EXE): $(OBJECTS)
-	$(CC) $^ -o $@ $(LFLAGS)
+	$(CC) $^ -o $@
 
 $(OBJDIR)%$(OFILES): $(SRCDIR)%$(SFILES) $(SRCDIR)%$(HFILES)
 	@mkdir -p $(@D)
