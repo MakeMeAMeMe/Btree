@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 void avl_create_tree(avl_tree** tree) {
     (*tree) = (avl_tree*)malloc(sizeof(avl_tree));
