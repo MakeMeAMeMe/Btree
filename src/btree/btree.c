@@ -1,11 +1,12 @@
 #include "btree.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 
-btree* create_b_tree(int order) {
+#define ORDEM 1
+
+btree* create_b_tree() {
     btree* new_tree = (btree*)malloc(sizeof(btree));
-    new_tree->order = order;
+    new_tree->order = ORDEM;
     new_tree->root = create_b_node(new_tree);
 
     return new_tree;
@@ -155,7 +156,7 @@ void delete_tree(btree *tree) {
 }
 
 void delete_node(btree_node *node) {
-  for(int i=0;i<4;i++) {
+  for(int i=0;i<(ORDEM*2 + 2);i++) {
       if(node->children[i])
         delete_node(node->children[i]);
   }

@@ -25,7 +25,7 @@ int main() {
     
     for (size_t test = 1; test <= 100; test++) {    // Testes variando de 1 á 100 chaves
         //for (size_t i = 0; i < 10; i++) {           // 10 testes por qtd de chaves
-            btree = create_b_tree(1);
+            btree = create_b_tree();
             for (int key = 0; key < test; key++) {  // geração das chaves
                     insert_b_key(btree, key);
                     printf("key inserted: %d\n", key);
