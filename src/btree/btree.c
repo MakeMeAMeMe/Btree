@@ -1,4 +1,5 @@
 #include "btree.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -148,18 +149,18 @@ void insert_recursive_key(btree* tree, btree_node* insert_node, btree_node* new_
     }
 }
 
-void delete_tree(btree *tree) {
-  if(tree->root != NULL)
-    delete_node(tree->root);
-
-  free(tree);
+void delete_tree(btree* tree) {
+    if (tree->root != NULL) {
+        delete_node(tree->root);
+    }
+    free(tree);
 }
 
-void delete_node(btree_node *node) {
-  for(int i=0;i<(ORDEM*2 + 2);i++) {
-      if(node->children[i])
-        delete_node(node->children[i]);
-  }
-
-  free(node);
+void delete_node(btree_node* node) {
+    for (int i = 0; i < (ORDEM * 2 + 2); i++) {
+        if (node->children[i])
+            delete_node(node->children[i]);
+    }
+    free(node->keys);
+    free(node);
 }

@@ -1,7 +1,7 @@
 SRCDIR  	:= src/
 OBJDIR  	:= obj/
 BINDIR  	:= bin/
-DATADIR  	:= data/
+DATADIR  	:= data/avl data/btree
 NAME    	:= btree
 EXE     	:= $(BINDIR)$(NAME)
 

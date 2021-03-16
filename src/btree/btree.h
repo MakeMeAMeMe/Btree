@@ -9,7 +9,7 @@ struct btree {
     int order;
 };
 
-btree* create_b_tree(int order);
+btree* create_b_tree();
 btree_node* create_b_node(btree* tree);
 void run_btree(btree_node* node, void(visit)(int key));
 int search_b_key(btree* tree, int key);

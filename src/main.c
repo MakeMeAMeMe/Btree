@@ -5,37 +5,43 @@
 #include "./btree/btree.h"
 #include "./avl_tree/avl_tree.h"
 
-#define PIOR_CASO_FILE_PATH "./data/pior_caso.txt"
-#define MEDIO_CASO_FILE_PATH "./data/medio_caso.txt"
+#define BTREE_PIOR_CASO_FILE_PATH "./data/btree/pior_caso.txt"
+#define BTREE_MEDIO_CASO_FILE_PATH "./data/btree/medio_caso.txt"
+#define AVL_PIOR_CASO_FILE_PATH "./data/avl/pior_caso.txt"
+#define AVL_MEDIO_CASO_FILE_PATH "./data/avl/medio_caso.txt"
 
 int main() {
     // A estratégia é criar um arquivo com dois campos por linha: qtd de keys inseridas, tempo gasto inserindo todas.
     // Precisa de dois arquivos, um para o pior caso, pode ser ordem crescente, e um para o caso médio, aleatório.
 
-    btree* btree;
+    // btree* btree;
+    avl_tree* avl_tree;
     FILE *pior_caso/*, *medio_caso*/;
     clock_t time_delta;
 
     srand(time(NULL));
 
     // Pior caso
-    pior_caso = fopen(PIOR_CASO_FILE_PATH, "w");
+    pior_caso = fopen(AVL_PIOR_CASO_FILE_PATH, "w");
     
     time_delta = clock();
     
     for (size_t test = 1; test <= 100; test++) {    // Testes variando de 1 á 100 chaves
-        //for (size_t i = 0; i < 10; i++) {           // 10 testes por qtd de chaves
-            btree = create_b_tree();
+        for (size_t i = 0; i < 10; i++) {           // 10 testes por qtd de chaves
+            // btree = create_b_tree();
+            avl_create_tree(&avl_tree);
+            time_delta = clock() - time_delta;
             for (int key = 0; key < test; key++) {  // geração das chaves
-                    insert_b_key(btree, key);
+                    avl_insert_key(avl_tree, key);
                     printf("key inserted: %d\n", key);
             }
             time_delta = clock() - time_delta;
             double time_taken = ((double)time_delta) / CLOCKS_PER_SEC;
             fprintf(pior_caso, "%zu %lf\n", test, time_taken);
-            delete_tree(btree);
-            printf("-----------------------------------\ntree end\n");
-        //}
+            avl_run(avl_tree);
+            avl_destroy_tree(avl_tree);
+            printf("-----------------------------------tree end\n");
+        }
     }
     fclose(pior_caso);
 

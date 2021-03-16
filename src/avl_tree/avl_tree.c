@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 void avl_create_tree(avl_tree** tree) {
     (*tree) = (avl_tree*)malloc(sizeof(avl_tree));
@@ -52,17 +51,28 @@ int avl_search_key(avl_tree* tree, int key) {
     return _avl_search_key(tree->root, key);
 }
 
-void _avl_insert_key(avl_node* node, int key) {
-    if (node == NULL) {
-        avl_create_node(&node, key);
-    } else if (node->key > key) {  // TODO: O que fazer quando node->key == key? Rejeitar a inserção ou adicionar assim mesmo? A direira ou a esquerda?
-        _avl_insert_key(node->left, key);
+void _avl_insert_key(avl_node** node, int key) {
+    if (*node == NULL) {
+        avl_create_node(node, key);
+        printf("%d\n", *node);
+    } else if ((*node)->key > key) {  // TODO: O que fazer quando node->key == key? Rejeitar a inserção ou adicionar assim mesmo? A direira ou a esquerda?
+        if ((*node)->left == NULL) {
+            avl_create_node(&((*node)->left), key);
+            (*node)->left->parent = (*node);
+        } else {
+            _avl_insert_key(&(*node)->left, key);
+        }
     } else {
-        _avl_insert_key(node->right, key);
+        if ((*node)->right == NULL) {
+            avl_create_node(&((*node)->right), key);
+            (*node)->right->parent = (*node);
+        } else {
+            _avl_insert_key(&(*node)->right, key);
+        }
     }
 }
 void avl_insert_key(avl_tree* tree, int key) {
-    _avl_insert_key(tree->root, key);
+    _avl_insert_key(&(tree->root), key);
 }
 
 int avl_delete_key(avl_tree* tree, int key);  //TODO: :(
@@ -110,10 +120,10 @@ int height(avl_node* node) {
         return 0;
     }
     if (node->left != NULL) {
-        left = altura(node->left) + 1;
+        left = height(node->left) + 1;
     }
     if (node->right != NULL) {
-        right = altura(node->right) + 1;
+        right = height(node->right) + 1;
     }
 
     return left > right ? left : right;
@@ -129,10 +139,10 @@ int bf(avl_node* node) {
     }
 
     if (node->left != NULL) {
-        left = altura(node->left) + 1;
+        left = height(node->left) + 1;
     }
     if (node->right != NULL) {
-        right = altura(node->right) + 1;
+        right = height(node->right) + 1;
     }
 
     return left - right;
@@ -153,7 +163,7 @@ avl_node* rse(avl_node* node) {
     return right;
 }
 
-avl_node* rse(avl_node* node) {
+avl_node* rsd(avl_node* node) {
     if (node == NULL) {
         return node;
     }
