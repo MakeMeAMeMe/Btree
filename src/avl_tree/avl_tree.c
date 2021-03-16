@@ -1,6 +1,7 @@
 #include "./avl_tree.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 void create_tree(avl_tree** tree) {
     (*tree) = (avl_tree*)malloc(sizeof(avl_tree));
@@ -48,6 +49,7 @@ int _search_key(avl_node* node, int key) {
 
 int search_key(avl_tree* tree, int key) {
     _search_key(tree->root, key);
+    return 0;
 }
 
 void _insert_key(avl_node* node, int key) {
