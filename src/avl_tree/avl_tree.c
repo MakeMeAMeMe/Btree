@@ -54,7 +54,6 @@ int avl_search_key(avl_tree* tree, int key) {
 void _avl_insert_key(avl_node** node, int key) {
     if (*node == NULL) {
         avl_create_node(node, key);
-        printf("%d\n", *node);
     } else if ((*node)->key > key) {  // TODO: O que fazer quando node->key == key? Rejeitar a inserção ou adicionar assim mesmo? A direira ou a esquerda?
         if ((*node)->left == NULL) {
             avl_create_node(&((*node)->left), key);

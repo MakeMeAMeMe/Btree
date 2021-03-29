@@ -117,7 +117,7 @@ btree_node* split_node(btree* tree, btree_node* split_node) {
 
     new_node->children[new_node->count] = split_node->children[split_node->count];
     if (new_node->children[new_node->count] != NULL)
-        new_node->children[new_node->count] = new_node;
+        new_node->children[new_node->count]->parent = new_node;
     split_node->count = mid;
 
     return new_node;
@@ -150,17 +150,25 @@ void insert_recursive_key(btree* tree, btree_node* insert_node, btree_node* new_
 }
 
 void delete_tree(btree* tree) {
-    if (tree->root != NULL) {
+    if (tree->root) {
+        printf("deleting root\n");
         delete_node(tree->root);
     }
+    printf("deleting tree\n");
     free(tree);
 }
 
 void delete_node(btree_node* node) {
     for (int i = 0; i < (ORDEM * 2 + 2); i++) {
-        if (node->children[i])
+        if (node->children[i]) {
             delete_node(node->children[i]);
+            printf("deleted child\n");
+        }
     }
-    free(node->keys);
-    free(node);
+    
+    if(node) {
+        printf("child with key %d being deleted\n", node->keys[0]);
+        free(node->keys);
+        free(node);
+    }
 }

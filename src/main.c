@@ -14,8 +14,8 @@ int main() {
     // A estratégia é criar um arquivo com dois campos por linha: qtd de keys inseridas, tempo gasto inserindo todas.
     // Precisa de dois arquivos, um para o pior caso, pode ser ordem crescente, e um para o caso médio, aleatório.
 
-    // btree* btree;
-    avl_tree* avl_tree;
+    btree* btree;
+    // avl_tree* avl_tree;
     FILE *pior_caso/*, *medio_caso*/;
     clock_t time_delta;
 
@@ -28,18 +28,17 @@ int main() {
     
     for (size_t test = 1; test <= 100; test++) {    // Testes variando de 1 á 100 chaves
         for (size_t i = 0; i < 10; i++) {           // 10 testes por qtd de chaves
-            // btree = create_b_tree();
-            avl_create_tree(&avl_tree);
+            btree = create_b_tree();
+            // avl_create_tree(&avl_tree);
             time_delta = clock() - time_delta;
             for (int key = 0; key < test; key++) {  // geração das chaves
-                    avl_insert_key(avl_tree, key);
+                    insert_b_key(btree, key);
                     printf("key inserted: %d\n", key);
             }
             time_delta = clock() - time_delta;
             double time_taken = ((double)time_delta) / CLOCKS_PER_SEC;
             fprintf(pior_caso, "%zu %lf\n", test, time_taken);
-            avl_run(avl_tree);
-            avl_destroy_tree(avl_tree);
+            free(btree);
             printf("-----------------------------------tree end\n");
         }
     }
