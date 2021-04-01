@@ -3,9 +3,9 @@ from pathlib import Path
 from typing import Dict
 
 
-def plt(pior_caso_data: Dict[int, float], medio_caso_data: Dict[int, float]):
+def plt(pior_caso_data: Dict[int, float], medio_caso_data: Dict[int, float], tree_name: str):
     figure = pyplot.figure()
-    figure.suptitle("Tempo Execução BTree")
+    figure.suptitle(f"Tempo Execução {tree_name}")
 
     subplot_pior_caso = figure.add_subplot(211)
     subplot_medio_caso = figure.add_subplot(212)
@@ -23,7 +23,7 @@ def plt(pior_caso_data: Dict[int, float], medio_caso_data: Dict[int, float]):
 
     pyplot.tight_layout()
 
-    pyplot.savefig("./data/btree_exec_time.png")
+    pyplot.savefig(f"./data/{tree_name}_exec_time.png")
 
 
 def get_data(path: Path) -> Dict[int, float]:
@@ -38,9 +38,15 @@ def get_data(path: Path) -> Dict[int, float]:
     return data
 
 
-pior_caso_path = Path("./data/pior_caso.txt")
-medio_caso_path = Path("./data/medio_caso.txt")
+pior_caso_avl_path = Path("./data/avl/pior_caso.txt")
+medio_caso_avl_path = Path("./data/avl/medio_caso.txt")
+pior_caso_btree_path = Path("./data/btree/pior_caso.txt")
+medio_caso_btree_path = Path("./data/btree/medio_caso.txt")
 
-pior_caso_data = get_data(pior_caso_path)
-medio_caso_data = get_data(medio_caso_path)
-plt(pior_caso_data=pior_caso_data, medio_caso_data=medio_caso_data)
+pior_caso_avl_data = get_data(pior_caso_avl_path)
+medio_caso_avl_data = get_data(medio_caso_avl_path)
+pior_caso_btree_data = get_data(pior_caso_btree_path)
+medio_caso_btree_data = get_data(medio_caso_btree_path)
+
+plt(pior_caso_data=pior_caso_btree_data, medio_caso_data=medio_caso_btree_data, tree_name="BTree")
+plt(pior_caso_data=pior_caso_avl_data, medio_caso_data=medio_caso_avl_data, tree_name="AVL")
