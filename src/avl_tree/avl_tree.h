@@ -17,5 +17,6 @@ int avl_delete_key(avl_tree* tree, int key);
 int avl_delete_key_and_sub_branch(avl_tree* tree, int key);
 void avl_destroy_tree(avl_tree* tree);
 void avl_destroy_node(avl_node* node);
+void avl_balance(avl_tree* tree,avl_node* node);
 
 #endif

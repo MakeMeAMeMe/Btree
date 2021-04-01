@@ -2,7 +2,7 @@ SRCDIR  	:= src/
 OBJDIR  	:= obj/
 BINDIR  	:= bin/
 DATADIR  	:= data/avl data/btree
-NAME    	:= btree
+NAME    	:= tree_comp
 EXE     	:= $(BINDIR)$(NAME)
 
 SFILES  	:= c

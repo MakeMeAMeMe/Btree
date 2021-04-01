@@ -2,63 +2,122 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "./btree/btree.h"
 #include "./avl_tree/avl_tree.h"
+#include "./btree/btree.h"
+#include "./data_manager/data_manager.h"
+#include "./polyfill/clock.h"
 
-#define BTREE_PIOR_CASO_FILE_PATH "./data/btree/pior_caso.txt"
-#define BTREE_MEDIO_CASO_FILE_PATH "./data/btree/medio_caso.txt"
-#define AVL_PIOR_CASO_FILE_PATH "./data/avl/pior_caso.txt"
-#define AVL_MEDIO_CASO_FILE_PATH "./data/avl/medio_caso.txt"
+#define QTD_KEYS 100
+#define QTD_TESTS 10
+
+#define TEST
 
 int main() {
     // A estratégia é criar um arquivo com dois campos por linha: qtd de keys inseridas, tempo gasto inserindo todas.
     // Precisa de dois arquivos, um para o pior caso, pode ser ordem crescente, e um para o caso médio, aleatório.
 
-    btree* btree;
-    // avl_tree* avl_tree;
-    FILE *pior_caso/*, *medio_caso*/;
-    clock_t time_delta;
+    btree* btree = NULL;
+    avl_tree* avl_tree = NULL;
+    clock_t clock_delta;
+    double time_delta;
+    int random_key;
+
+    data_manager* manager = NULL;
 
     srand(time(NULL));
 
-    // Pior caso
-    pior_caso = fopen(AVL_PIOR_CASO_FILE_PATH, "w");
-    
-    time_delta = clock();
-    
-    for (size_t test = 1; test <= 100; test++) {    // Testes variando de 1 á 100 chaves
-        for (size_t i = 0; i < 10; i++) {           // 10 testes por qtd de chaves
+    clock_delta = clock();
+
+#ifdef TEST
+    long qtd_keys;
+    int user_key;
+    scanf("%ld", &qtd_keys);
+    init_manager(&manager, QTD_KEYS * QTD_TESTS);
+    avl_create_tree(&avl_tree);
+    reset_clock(&clock_delta);
+    for (int key = 0; key < qtd_keys; key++) {
+        scanf("%d", &user_key);
+        avl_insert_key(avl_tree, user_key);
+    }
+    reset_clock(&clock_delta);
+    time_taken(clock_delta, &time_delta);
+    add_data_manager(manager, (data_pair){.qtd_keys = qtd_keys, .time_taken = time_delta});
+    avl_destroy_tree(avl_tree);
+    destroy_manager(manager);
+#endif
+
+#ifndef TEST
+    init_manager(&manager, QTD_KEYS * QTD_TESTS);
+    for (size_t qtd_keys = 1; qtd_keys <= QTD_KEYS; qtd_keys++) {
+        for (size_t test = 0; test < QTD_TESTS; test++) {
             btree = create_b_tree();
-            // avl_create_tree(&avl_tree);
-            time_delta = clock() - time_delta;
-            for (int key = 0; key < test; key++) {  // geração das chaves
-                    insert_b_key(btree, key);
-                    printf("key inserted: %d\n", key);
+            reset_clock(&clock_delta);
+            for (int key = 0; key < qtd_keys; key++) {
+                insert_b_key(btree, key);
             }
-            time_delta = clock() - time_delta;
-            double time_taken = ((double)time_delta) / CLOCKS_PER_SEC;
-            fprintf(pior_caso, "%zu %lf\n", test, time_taken);
+            reset_clock(&clock_delta);
+            time_taken(clock_delta, &time_delta);
+            add_data_manager(manager, (data_pair){.qtd_keys = qtd_keys, .time_taken = time_delta});
             free(btree);
-            printf("-----------------------------------tree end\n");
         }
     }
-    fclose(pior_caso);
+    write_to_file(manager, PIOR_CASO_BTREE_PATH);
+    destroy_manager(manager);
 
-    /*
-    // caso médio
-    medio_caso = fopen(MEDIO_CASO_FILE_PATH, "w");
-    time_delta -= time_delta; // Espero que resete
-
-    for (size_t test = 1; test <= 100; test++) {
-        for (int i = 0; i < test; i++) {
-            // insert_key(btree, rand());
-            printf("%u\n", rand());
+    init_manager(&manager, QTD_KEYS * QTD_TESTS);
+    for (size_t qtd_keys = 1; qtd_keys <= QTD_KEYS; qtd_keys++) {
+        for (size_t test = 0; test < QTD_TESTS; test++) {
+            btree = create_b_tree();
+            reset_clock(&clock_delta);
+            for (int key = 0; key < qtd_keys; key++) {
+                random_key = rand() % 100;  // Normalizar para range [0, 99], ficando parecido com o sequencial
+                insert_b_key(btree, random_key);
+            }
+            reset_clock(&clock_delta);
+            time_taken(clock_delta, &time_delta);
+            add_data_manager(manager, (data_pair){.qtd_keys = qtd_keys, .time_taken = time_delta});
+            free(btree);
         }
-        time_delta = clock() - time_delta;
-        double time_taken = ((double)time_delta) / CLOCKS_PER_SEC;
-        fprintf(medio_caso, "%zu %lf\n", test, time_taken);
     }
-    fclose(medio_caso);
-    */
+    write_to_file(manager, MEDIO_CASO_BTREE_PATH);
+    destroy_manager(manager);
+
+    init_manager(&manager, QTD_KEYS * QTD_TESTS);
+    for (size_t qtd_keys = 1; qtd_keys <= QTD_KEYS; qtd_keys++) {
+        for (size_t test = 0; test < QTD_TESTS; test++) {
+            avl_create_tree(&avl_tree);
+            reset_clock(&clock_delta);
+            for (int key = 0; key < qtd_keys; key++) {
+                avl_insert_key(avl_tree, key);
+            }
+            reset_clock(&clock_delta);
+            time_taken(clock_delta, &time_delta);
+            add_data_manager(manager, (data_pair){.qtd_keys = qtd_keys, .time_taken = time_delta});
+            avl_destroy_tree(avl_tree);
+        }
+    }
+    write_to_file(manager, PIOR_CASO_AVL_PATH);
+    destroy_manager(manager);
+
+    init_manager(&manager, QTD_KEYS * QTD_TESTS);
+    for (size_t qtd_keys = 1; qtd_keys <= QTD_KEYS; qtd_keys++) {
+        for (size_t test = 0; test < QTD_TESTS; test++) {
+            avl_create_tree(&avl_tree);
+            reset_clock(&clock_delta);
+            for (int key = 0; key < qtd_keys; key++) {
+                random_key = rand() % 100;  // Normalizar para range [0, 99], ficando parecido com o sequencial
+                printf("%d\n", random_key);
+                avl_insert_key(avl_tree, random_key);
+            }
+            printf("Fim %zu %zu\n", qtd_keys, test);
+            reset_clock(&clock_delta);
+            time_taken(clock_delta, &time_delta);
+            add_data_manager(manager, (data_pair){.qtd_keys = qtd_keys, .time_taken = time_delta});
+            // avl_destroy_tree(avl_tree);
+        }
+    }
+    write_to_file(manager, MEDIO_CASO_AVL_PATH);
+    destroy_manager(manager);
+#endif
     return 0;
 }
