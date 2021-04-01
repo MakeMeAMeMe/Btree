@@ -7,6 +7,7 @@ struct avl_node {
     avl_node* left;
     avl_node* parent;
     int key;
+    unsigned count;
 };
 
 #endif

@@ -10,10 +10,15 @@ void avl_create_tree(avl_tree** tree) {
 
 void avl_create_node(avl_node** node, int key) {
     (*node) = (avl_node*)malloc(sizeof(avl_node));
+    if(!(*node)){
+        printf("Erro ao alocar memória\n");
+        exit(1);
+    }
     (*node)->left = NULL;
     (*node)->right = NULL;
     (*node)->parent = NULL;
     (*node)->key = key;
+    (*node)->count = 1;
 }
 
 void _avl_run(avl_node* node) {
@@ -23,13 +28,13 @@ void _avl_run(avl_node* node) {
     if (node->right) {
         _avl_run(node->right);
     }
-    printf("%d ", node->key);
+    printf("%d(%u)\n", node->key, node->count);
 }
 
 void avl_run(avl_tree* tree) {
     if (tree->root) {
         _avl_run(tree->root);
-        printf("\n");
+        printf("--------\n");
     } else {
         printf("Tree is Empty\n");
     }
@@ -55,25 +60,25 @@ int avl_search_key(avl_tree* tree, int key) {
 void _avl_insert_key(avl_tree* tree, avl_node** node, int key) {
     if (*node == NULL) {
         avl_create_node(node, key);
-    } else if ((*node)->key > key) {  // TODO: O que fazer quando node->key == key? Rejeitar a inserção ou adicionar assim mesmo? A direira ou a esquerda?
+    } 
+    // else if ((*node)->key == key) {
+    //     node->count++;
+    // } 
+    else if ((*node)->key > key) {  // TODO: O que fazer quando node->key == key? Rejeitar a inserção ou adicionar assim mesmo? A direira ou a esquerda?
         if ((*node)->left == NULL) {
             avl_create_node(&((*node)->left), key);
-            (*node)->left->parent = (*node);
-            printf("key: %d\n", (*node)->left->key);
-            avl_run(tree);
-            avl_balance(tree, (*node)->left);
+            ((*node)->left)->parent = *node;
+            avl_balance(tree, ((*node)->left));
         } else {
-            _avl_insert_key(tree, &(*node)->left, key);
+            _avl_insert_key(tree, &((*node)->left), key);
         }
-    } else {
+    } else if ((*node)->key < key) { 
         if ((*node)->right == NULL) {
             avl_create_node(&((*node)->right), key);
-            (*node)->right->parent = (*node);
-            printf("key: %d\n", (*node)->right->key);
-            avl_run(tree);
-            avl_balance(tree, (*node)->right);
+            ((*node)->right)->parent = *node;
+            avl_balance(tree, ((*node)->right));
         } else {
-            _avl_insert_key(tree, &(*node)->right, key);
+            _avl_insert_key(tree, &((*node)->right), key);
         }
     }
 }
@@ -109,6 +114,7 @@ void avl_destroy_tree(avl_tree* tree) {
 }
 
 void avl_destroy_node(avl_node* node) {
+    printf("node: %p\n", node);
     if (node->right) {
         avl_destroy_node(node->right);
     }
@@ -143,6 +149,10 @@ int bf(avl_node* node) {
     if (node == NULL) {
         return 0;
     }
+
+    // printf("node %p ", node);
+    // printf("left %p ", node->left);
+    // printf("right %p\n", node->right);
 
     if (node->left != NULL) {
         left = height(node->left) + 1;
@@ -204,6 +214,7 @@ avl_node* rde(avl_tree* tree, avl_node* node) {
     node->right = rsd(tree, node->right);
     return rse(tree, node);
 }
+
 avl_node* rdd(avl_tree* tree, avl_node* node) {
     node->left = rse(tree, node->left);
     return rsd(tree, node);
@@ -212,25 +223,19 @@ avl_node* rdd(avl_tree* tree, avl_node* node) {
 void avl_balance(avl_tree* tree, avl_node* node) {
     int bf_node, bf_left, bf_right;
     while (node != NULL) {
-        printf("%p %p", tree->root, node);
         bf_node = bf(node);
-        bf_left = bf(node->left);
-        bf_right = bf(node->right);
-        printf("%d %d %d\n", bf_node, bf_left, bf_right);
-        if (bf(node) > 1) {
-            if (bf(node->left) > 0) {
-                // printf("RSD(%d)\n", node->key);
+        if (bf_node > 1) {
+            bf_left = bf(node->left);
+            if (bf_left > 0) {
                 rsd(tree, node);
             } else {
-                // printf("RDD(%d)\n", node->key);
                 rdd(tree, node);
             }
-        } else if (bf(node) < -1) {
-            if (bf(node->right) < 0) {
-                // printf("RSE(%d)\n", node->key);
+        } else if (bf_node < -1) {
+            bf_right = bf(node->right);
+            if (bf_right < 0) {
                 rse(tree, node);
             } else {
-                // printf("RDE(%d)\n", node->key);
                 rde(tree, node);
             }
         }

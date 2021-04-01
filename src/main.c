@@ -10,7 +10,7 @@
 #define QTD_KEYS 100
 #define QTD_TESTS 10
 
-#define TEST
+// #define TEST
 
 int main() {
     // A estratégia é criar um arquivo com dois campos por linha: qtd de keys inseridas, tempo gasto inserindo todas.
@@ -93,6 +93,7 @@ int main() {
             reset_clock(&clock_delta);
             time_taken(clock_delta, &time_delta);
             add_data_manager(manager, (data_pair){.qtd_keys = qtd_keys, .time_taken = time_delta});
+            avl_run(avl_tree);
             avl_destroy_tree(avl_tree);
         }
     }
@@ -103,17 +104,19 @@ int main() {
     for (size_t qtd_keys = 1; qtd_keys <= QTD_KEYS; qtd_keys++) {
         for (size_t test = 0; test < QTD_TESTS; test++) {
             avl_create_tree(&avl_tree);
+            printf("nova\n");
             reset_clock(&clock_delta);
             for (int key = 0; key < qtd_keys; key++) {
-                random_key = rand() % 100;  // Normalizar para range [0, 99], ficando parecido com o sequencial
-                printf("%d\n", random_key);
+                do {
+                    random_key = rand() % 100;  // Normalizar para range [0, 99], ficando parecido com o sequencial
+                } while (avl_search_key(avl_tree, random_key));
+                printf("key: %d\n", random_key);
                 avl_insert_key(avl_tree, random_key);
             }
-            printf("Fim %zu %zu\n", qtd_keys, test);
             reset_clock(&clock_delta);
             time_taken(clock_delta, &time_delta);
             add_data_manager(manager, (data_pair){.qtd_keys = qtd_keys, .time_taken = time_delta});
-            // avl_destroy_tree(avl_tree);
+            avl_destroy_tree(avl_tree);
         }
     }
     write_to_file(manager, MEDIO_CASO_AVL_PATH);
