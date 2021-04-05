@@ -434,13 +434,14 @@ avl_node* rse(avl_tree* tree, avl_node* node) {
     if (parent == NULL) {
         tree->root = right;
     } else {
-        if (parent->left == node) {
+        if (parent->key > node->key) {
             parent->left = right;
-        } else if (parent->right == node) {
+        } else if (parent->key < node->key) {
             parent->right = right;
         } else {
             printf("e %p %p %p %p\n", parent, parent->right, parent->left, node);
             printf("nop\n");
+            exit(500);// TODO: Nunca chegar aqui
         }
     }
     return right;
@@ -459,13 +460,14 @@ avl_node* rsd(avl_tree* tree, avl_node* node) {
     if (parent == NULL) {
         tree->root = left;
     } else {
-        if (parent->left == node) {
+        if (parent->key > node->key) {
             parent->left = left;
-        } else if (parent->right == node) {
+        } else if (parent->key < node->key) {
             parent->right = left;
         } else {
             printf("r %p %p %p %p\n", parent, parent->right, parent->left, node);
             printf("nop\n");
+            exit(500);// TODO: Nunca chegar aqui
         }
     }
 

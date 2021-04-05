@@ -10,7 +10,7 @@
 #define QTD_KEYS 100
 #define QTD_TESTS 10
 
-#define TEST 1
+#define TEST 0
 #define PROFESSOR 0
 
 int main() {
@@ -126,6 +126,7 @@ int main() {
             reset_clock(&clock_delta);
             time_taken(clock_delta, &time_delta);
             add_data_manager(manager, (data_pair){.qtd_keys = qtd_keys, .time_taken = time_delta});
+            avl_run(avl_tree);
             avl_destroy_tree(avl_tree);
         }
     }
