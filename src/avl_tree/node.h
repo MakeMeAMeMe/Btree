@@ -5,8 +5,8 @@ typedef struct avl_node avl_node;
 struct avl_node {
     avl_node* right;
     avl_node* left;
-    avl_node* parent;
     int key;
+    int node_height;
     unsigned count;
 };
 
