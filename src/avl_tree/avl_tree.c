@@ -60,112 +60,68 @@ int avl_search_key(avl_tree* tree, int key) {
 avl_node* _avl_insert_key(avl_tree* tree, avl_node** node, int key) {
     if (*node == NULL) {
         avl_create_node(node, key);
-    }
-    // else if ((*node)->key == key) {
-    //     node->count++;
-    // }
-    else if(key > (*node)->key) {
+    } else if ((*node)->key == key) {
+        (*node)->count++;
+    } else if (key > (*node)->key) {
         (*node)->right = _avl_insert_key(tree, &(*node)->right, key);
-        if(bf((*node))==-2) {
-            if(key > (*node)->right->key)
+        if (bf((*node)) == -2) {
+            if (key > (*node)->right->key)
                 (*node) = RR((*node));
             else
                 (*node) = RL((*node));
-        } 
-    } else if (key < (*node)->key) {
-            (*node)->left = _avl_insert_key(tree, &(*node)->left, key);
-            if(bf((*node))==2) {
-                if(key < (*node)->left->key)
-                    (*node) = LL((*node));
-                else
-                    (*node) = LR((*node));
-            }
         }
+    } else if (key < (*node)->key) {
+        (*node)->left = _avl_insert_key(tree, &(*node)->left, key);
+        if (bf((*node)) == 2) {
+            if (key < (*node)->left->key)
+                (*node) = LL((*node));
+            else
+                (*node) = LR((*node));
+        }
+    }
     (*node)->node_height = height((*node));
 
     return (*node);
 }
-/*
-void avl_insert_key(avl_tree* tree, int key) {
-    _avl_insert_key(tree, &(tree->root), key);
-}
 
-int avl_delete_key(avl_tree* tree, int key);  //TODO: :(
+avl_node* delete (avl_node* node, int key) {
+    avl_node* aux_node;
 
-int _avl_delete_key_and_sub_branch(avl_node** node, int key) {
-    if (*node == NULL) {
-        return 0;
-    } else {
-        if ((*node)->key == key) {
-            avl_destroy_node(*node);
-            return 1;
-        } else if ((*node)->key > key) {
-            return _avl_delete_key_and_sub_branch(&((*node)->left), key);
-        } else {
-            return _avl_delete_key_and_sub_branch(&((*node)->right), key);
-        }
-    }
-}
-int avl_delete_key_and_sub_branch(avl_tree* tree, int key) {
-    return _avl_delete_key_and_sub_branch(&(tree->root), key);
-}
-
-void avl_destroy_tree(avl_tree* tree) {
-    if (tree->root) {
-        avl_destroy_node(tree->root);
-    }
-    free(tree);
-}
-
-void avl_destroy_node(avl_node* node) {
-    printf("node: %p\n", node);
-    if (node->right) {
-        avl_destroy_node(node->right);
-    }
-    if (node->left) {
-        avl_destroy_node(node->left);
-    }
-    free(node);
-}*/
-
-avl_node *Delete(avl_node *node, int key) {
-    avl_node *aux_node;
-
-    if(node==NULL)
+    if (node == NULL)
         return NULL;
-    else if(key > node->key) {
-        node->right=Delete(node->right,key);
-        if(bf(node)==2) {
-            if(bf(node->left) >= 0)
-                node=LL(node);
+    else if (key > node->key) {
+        node->right = Delete(node->right, key);
+        if (bf(node) == 2) {
+            if (bf(node->left) >= 0)
+                node = LL(node);
             else
-                node=LR(node);
+                node = LR(node);
         }
     } else if (key < node->key) {
-        node->left = Delete(node->left,key);
-        if(bf(node) == -2) {
-            if(bf(node->right) <= 0)
+        node->left = Delete(node->left, key);
+        if (bf(node) == -2) {
+            if (bf(node->right) <= 0)
                 node = RR(node);
             else
                 node = RL(node);
         }
     } else {
-            if(node->right != NULL) {
-                aux_node = node->right;
-                while(aux_node->left != NULL)
-                    aux_node = aux_node->left;
-                
-                node->key = aux_node->key;
-                node->right = Delete(node->right,aux_node->key);
+        if (node->right != NULL) {
+            aux_node = node->right;
+            while (aux_node->left != NULL)
+                aux_node = aux_node->left;
 
-                if(bf(node) == 2) {
-                    if(bf(node->left) >= 0)
-                        node = LL(node);
-                    else
-                        node = LR(node);
-                }
-            } else
-                return node->left;
+            node->key = aux_node->key;
+            node->right = Delete(node->right, aux_node->key);
+
+            if (bf(node) == 2) {
+                if (bf(node->left) >= 0)
+                    node = LL(node);
+                else
+                    node = LR(node);
+            }
+        } else
+            return node->left;
     }
     node->node_height = height(node);
     return node;
@@ -177,7 +133,7 @@ int height(avl_node* node) {
     right = 0;
     if (node == NULL) {
         return 0;
-    } 
+    }
     if (node->right == NULL) {
         right = 0;
     } else {
@@ -201,10 +157,6 @@ int bf(avl_node* node) {
         return 0;
     }
 
-    // printf("node %p ", node);
-    // printf("left %p ", node->left);
-    // printf("right %p\n", node->right);
-
     if (node->left != NULL) {
         left = 1 + node->left->node_height;
     }
@@ -215,8 +167,8 @@ int bf(avl_node* node) {
     return left - right;
 }
 
-avl_node* rotate_right(avl_node *node) {
-    avl_node *aux;
+avl_node* rotate_right(avl_node* node) {
+    avl_node* aux;
     aux = node->left;
     node->left = aux->right;
     aux->right = node;
@@ -225,8 +177,8 @@ avl_node* rotate_right(avl_node *node) {
     return aux;
 }
 
-avl_node* rotate_left(avl_node *node) {
-    avl_node *aux;
+avl_node* rotate_left(avl_node* node) {
+    avl_node* aux;
     aux = node->right;
     node->right = aux->left;
     aux->left = node;
@@ -256,84 +208,3 @@ avl_node* RL(avl_node* node) {
     node = rotate_left(node);
     return node;
 }
-
-/*
-avl_node* rse(avl_tree* tree, avl_node* node) {
-    avl_node* parent = node->parent;
-    avl_node* right = node->right;
-
-    node->right = right->left;
-    node->parent = right;
-
-    right->left = node;
-    right->parent = parent;
-
-    if (parent == NULL) {   
-        tree->root = right;
-    } else {
-        if (parent->left == node) {
-            parent->left = right;
-        } else {
-            parent->right = right;
-        }
-    }
-
-    return right;
-}
-
-avl_node* rsd(avl_tree* tree, avl_node* node) {
-    avl_node* parent = node->parent;
-    avl_node* left = node->left;
-
-    node->left = left->right;
-    node->parent = left;
-
-    left->right = node;
-    left->parent = parent;
-
-    if (parent == NULL) {
-        tree->root = left;
-    } else {
-        if (parent->left == node) {
-            parent->left = left;
-        } else {
-            parent->right = left;
-        }
-    }
-
-    return left;
-}
-
-avl_node* rde(avl_tree* tree, avl_node* node) {
-    node->right = rsd(tree, node->right);
-    return rse(tree, node);
-}
-
-avl_node* rdd(avl_tree* tree, avl_node* node) {
-    node->left = rse(tree, node->left);
-    return rsd(tree, node);
-}
-
-void avl_balance(avl_tree* tree, avl_node* node) {
-    int bf_node, bf_left, bf_right;
-    while (node != NULL) {
-        bf_node = bf(node);
-        if (bf_node > 1) {
-            bf_left = bf(node->left);
-            if (bf_left > 0) {
-                rsd(tree, node);
-            } else {
-                rdd(tree, node);
-            }
-        } else if (bf_node < -1) {
-            bf_right = bf(node->right);
-            if (bf_right < 0) {
-                rse(tree, node);
-            } else {
-                rde(tree, node);
-            }
-        }
-        node = node->parent;
-    }
-}
-*/
