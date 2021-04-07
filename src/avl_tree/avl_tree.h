@@ -16,7 +16,7 @@ void avl_run(avl_tree* tree);
 int _avl_search_key(avl_node* node, int key);
 int avl_search_key(avl_tree* tree, int key);
 avl_node* _avl_insert_key(avl_tree* tree, avl_node** node, int key);
-avl_node *Delete(avl_node *node, int key);
+avl_node *avl_delete(avl_node *node, int key);
 int height(avl_node* node);
 int bf(avl_node* node);
 avl_node* rotate_right(avl_node *node);

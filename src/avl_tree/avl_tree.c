@@ -84,13 +84,13 @@ avl_node* _avl_insert_key(avl_tree* tree, avl_node** node, int key) {
     return (*node);
 }
 
-avl_node* delete (avl_node* node, int key) {
+avl_node* avl_delete (avl_node* node, int key) {
     avl_node* aux_node;
 
     if (node == NULL)
         return NULL;
     else if (key > node->key) {
-        node->right = Delete(node->right, key);
+        node->right = avl_delete(node->right, key);
         if (bf(node) == 2) {
             if (bf(node->left) >= 0)
                 node = LL(node);
@@ -98,7 +98,7 @@ avl_node* delete (avl_node* node, int key) {
                 node = LR(node);
         }
     } else if (key < node->key) {
-        node->left = Delete(node->left, key);
+        node->left = avl_delete(node->left, key);
         if (bf(node) == -2) {
             if (bf(node->right) <= 0)
                 node = RR(node);
@@ -112,7 +112,7 @@ avl_node* delete (avl_node* node, int key) {
                 aux_node = aux_node->left;
 
             node->key = aux_node->key;
-            node->right = Delete(node->right, aux_node->key);
+            node->right = avl_delete(node->right, aux_node->key);
 
             if (bf(node) == 2) {
                 if (bf(node->left) >= 0)

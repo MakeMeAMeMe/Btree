@@ -90,9 +90,8 @@ int main() {
             reset_clock(&clock_delta);
             time_taken(clock_delta, &time_delta);
             add_data_manager(manager, (data_pair){.qtd_keys = qtd_keys, .time_taken = time_delta});
-            avl_run(avl_tree);
             for (int i = 0; i < 100; i++)
-                avl_tree->root = Delete(avl_tree->root, i);
+                avl_tree->root = avl_delete(avl_tree->root, i);
         }
     }
     write_to_file(manager, PIOR_CASO_AVL_PATH);
@@ -102,7 +101,6 @@ int main() {
     for (size_t qtd_keys = 1; qtd_keys <= QTD_KEYS; qtd_keys++) {
         for (size_t test = 0; test < QTD_TESTS; test++) {
             avl_create_tree(&avl_tree);
-            printf("nova\n");
             reset_clock(&clock_delta);
             shuffle(random_keys, 100);
             for (int key = 0; key < qtd_keys; key++) {
@@ -112,7 +110,7 @@ int main() {
             time_taken(clock_delta, &time_delta);
             add_data_manager(manager, (data_pair){.qtd_keys = qtd_keys, .time_taken = time_delta});
             for (int i = 0; i < 100; i++)
-                avl_tree->root = Delete(avl_tree->root, i);
+                avl_tree->root = avl_delete(avl_tree->root, i);
         }
     }
     write_to_file(manager, MEDIO_CASO_AVL_PATH);

@@ -40,6 +40,9 @@ void write_to_file(data_manager* manager, const char* filepath) {
     }
 
     fclose(file);
+
+    printf("Data on path %s written successfully, with %zu lines of data\n", filepath, manager->qtd_data);
+
 }
 
 void destroy_manager(data_manager* manager) {
